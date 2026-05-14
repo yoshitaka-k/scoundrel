@@ -1,20 +1,31 @@
-use crate::constants::{
-    ROOM_MAX_CARD,
+use crossterm::{
+    execute,
+    cursor::{MoveTo},
+    terminal::{Clear, ClearType},
 };
+use std::io::{stdout, Write};
+
+use crate::constants::{ROOM_MAX_CARD};
 use crate::cli::{
     console::{
         print_br,
         print_single_separator,
+        print_double_separator,
     },
     print_display::{
+        title_display,
         dungeon_count_display,
         room_display,
         player_display,
     },
+    indicate::execute_with_spinner,
 };
-use crate::logic::GameSession;
+use crate::logic::{GameSession};
 use crate::trump::{Deck, Field, Player};
-use crate::wait_for_dramatic_pause;
+use crate::{
+    wait_for_dramatic_pause,
+    wait_for_long_dramatic_pause,
+};
 
 pub fn app() -> std::io::Result<()> {
     let mut deck = Deck::new();
@@ -24,11 +35,25 @@ pub fn app() -> std::io::Result<()> {
     let mut selected_count: usize = 0;
     let mut is_skip: bool = false;
 
+    let mut stroke = stdout();
+
     GameSession::shuffle(&player, deck.get_cards());
 
     print_single_separator();
 
     'app: loop {
+        execute!(
+            stroke,
+            Clear(ClearType::All),
+            MoveTo(0, 0)
+        )?;
+
+        print_double_separator();
+
+        title_display();
+
+        print_double_separator();
+
         if selected_count == 0 {
             if !GameSession::room_setup(&mut deck, &mut field) {
                 println!("Game Clear.");
@@ -93,8 +118,25 @@ pub fn app() -> std::io::Result<()> {
         }
 
         if selected_count > 2 {
+            execute_with_spinner(
+                "Next Terun ...",
+                "",
+            || {
+                wait_for_long_dramatic_pause();
+            });
+
             selected_count = 0;
+        } else {
+
+            execute_with_spinner(
+                "Next card selected ...",
+                "",
+            || {
+                wait_for_long_dramatic_pause();
+            });
         }
+
+        stdout().flush()?;
     }
 }
 

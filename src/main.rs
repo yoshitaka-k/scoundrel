@@ -1,10 +1,32 @@
-use scoundrel::cli::console::{
-    print_br,
-    print_double_separator
+use crossterm::{
+    execute,
+    cursor::{MoveTo},
+    terminal::{Clear, ClearType},
+};
+use std::io::{stdout, Write};
+
+use scoundrel::cli::{
+    console::{
+        print_br,
+        print_double_separator
+    },
+    print_display::{title_display}
 };
 use scoundrel::game::{app};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let mut stroke = stdout();
+
+    execute!(
+        stroke,
+        Clear(ClearType::All),
+        MoveTo(0, 0)
+    )?;
+
+    print_double_separator();
+
+    title_display();
+
     print_double_separator();
 
     let _ = app();
@@ -12,6 +34,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     print_double_separator();
 
     print_br();
+
+    stdout().flush()?;
 
     Ok(())
 }

@@ -1,5 +1,20 @@
-use crate::cli::console::print_br;
+use figlet_rs::FIGlet;
+use crate::cli::console::{
+    print_br,
+    print_single_separator,
+};
 use crate::{Card, Deck, Player};
+
+pub fn title_display() {
+    let standard_font = FIGlet::standard().unwrap();
+    print!("{}", standard_font.convert("Scoundrel").unwrap());
+
+    print_single_separator();
+
+    println!("  Version: {}  |  License: {}", env!("CARGO_PKG_VERSION"), env!("CARGO_PKG_LICENSE"));
+    println!("  Starting Scoundrel Game Engine... 🚀");
+
+}
 
 /// ダンジョンカード数
 pub fn dungeon_count_display(deck: &Deck) {

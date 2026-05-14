@@ -20,6 +20,11 @@ pub fn wait_for_dramatic_pause() {
     std::thread::sleep(std::time::Duration::from_millis(200));
 }
 
+/// 表示させた後少し待機
+pub fn wait_for_long_dramatic_pause() {
+    std::thread::sleep(std::time::Duration::from_millis(3000));
+}
+
 /// 真ん中あたりの位置を取得（少しだけランダム）
 pub fn get_center_position(cards_len: usize) -> usize {
     if cards_len == 0 {
