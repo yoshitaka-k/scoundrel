@@ -1,4 +1,11 @@
 use figlet_rs::FIGlet;
+use crossterm::{
+    execute,
+    cursor::{MoveTo},
+    style::{Print, Stylize},
+};
+use std::io::{stdout};
+
 use crate::cli::console::{
     print_br,
     print_single_separator,
@@ -7,8 +14,9 @@ use crate::{Card, Deck, Player};
 
 pub fn title_display() {
     let standard_font = FIGlet::standard().unwrap();
+    let title = &format!("{}", standard_font.convert("Scoundrel").unwrap());
 
-    print!("{}", standard_font.convert("Scoundrel").unwrap());
+    print!("{}", title.clone().magenta().bold());
 
     print_single_separator();
 
@@ -34,25 +42,55 @@ pub fn room_display(room: &Vec<Card>, is_skip: bool) {
 
     if room.len() == 4 && is_skip == false {
         println!("  0: Skip.");
+    } else {
+        print_br();
     }
 }
 
 /// 装備カード表示
-pub fn player_display(player: &Player) {
-    println!("Health.");
-    println!("  {} point", player.get_hp());
+pub fn player_display(player: &Player) -> Result<(), Box<dyn std::error::Error>> {
+    let mut stroke = stdout();
+
+    execute!(
+        stroke,
+        MoveTo(0, 16),
+        Print("Health."),
+    )?;
+
+    execute!(
+        stroke,
+        MoveTo(0, 17),
+        Print(format!("  {} point", player.get_hp()))
+    )?;
+
+    execute!(
+        stroke,
+        MoveTo(20, 16),
+        Print("Equip Card.")
+    )?;
+
+    execute!(
+        stroke,
+        MoveTo(20, 17),
+        Print(format!("  {}", player.get_equip_name()))
+    )?;
 
     print_br();
 
-    println!("Equip Card.");
-    println!("  {}", player.get_equip_name());
+    execute!(
+        stroke,
+        MoveTo(0, 19),
+        Print("Selected History.")
+    )?;
 
-    print_br();
+    execute!(
+        stroke,
+        MoveTo(0, 20),
+    )?;
 
-    println!("Selected History.");
     if player.selected_len() == 0 {
         println!("  None");
-        return;
+        return Ok(());
     }
 
     let mut selected_str: String = String::new();
@@ -61,6 +99,8 @@ pub fn player_display(player: &Player) {
         selected_str = format!("{} {},", selected_str, card);
     }
     println!("  {}", selected_str.trim_end_matches(',').trim());
+
+    Ok(())
 }
 
 /// ポーション効果表示

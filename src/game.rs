@@ -2,6 +2,7 @@ use crossterm::{
     execute,
     cursor::{MoveTo},
     terminal::{Clear, ClearType},
+    style::{Stylize},
 };
 use std::io::{stdout, Write};
 
@@ -54,7 +55,8 @@ pub fn app() -> std::io::Result<()> {
 
         print_double_separator();
 
-        println!("  Deck setup and {} a shuffle end.", player.get_name());
+        print!("{} ", "/".green());
+        println!("Deck setup and {} a shuffle end.", player.get_name());
 
         print_single_separator();
 
@@ -76,11 +78,11 @@ pub fn app() -> std::io::Result<()> {
 
         print_br();
 
-        room_display(field.get_room(), is_skip);
+        let _ = player_display(&player);
 
         print_br();
 
-        player_display(&player);
+        room_display(field.get_room(), is_skip);
 
         print_br();
 
