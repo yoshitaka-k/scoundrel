@@ -30,6 +30,7 @@ use crate::logic::shuffle::{
     DealParams,
 };
 use crate::trump::{Card, Deck, Field, Player};
+use crate::{wait_for_dramatic_pause};
 
 pub struct GameSession();
 impl GameSession {
@@ -152,6 +153,8 @@ impl GameSession {
         if damage < 0 {
             player.damage_hp(damage);
         }
+
+        wait_for_dramatic_pause();
 
         battle_result_display(player, card, damage);
     }
