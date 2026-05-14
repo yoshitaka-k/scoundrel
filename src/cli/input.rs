@@ -1,5 +1,7 @@
 use std::io::{self};
-
+use crossterm::{
+    style::{Stylize},
+};
 use rustyline::error::ReadlineError;
 
 use crate::cli::console::{system_bold, error};
@@ -27,7 +29,8 @@ pub fn input_usize_read_line(input_msg: &str,
 /// 入力処理（ベース）
 fn read_line(prompt: &str) -> rustyline::Result<String> {
     let mut rl = rustyline::DefaultEditor::new()?;
-    let readline = rl.readline(&format!("[INPUT] {} >> ", prompt));
+    let input_tag = format!("{}", "[INPUT]".yellow());
+    let readline = rl.readline(&format!("{} {} >> ", input_tag, prompt));
 
     match readline {
         Ok(line) => Ok(line.trim().to_string()),

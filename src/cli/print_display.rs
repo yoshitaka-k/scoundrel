@@ -57,10 +57,18 @@ pub fn player_display(player: &Player) -> Result<(), Box<dyn std::error::Error>>
         Print("Health."),
     )?;
 
+    let mut player_hp = format!("{} point", player.get_hp()).green();
+    if player.get_hp() < 14 {
+        player_hp = format!("{} point", player.get_hp()).yellow();
+    }
+    if player.get_hp() < 6 {
+        player_hp = format!("{} point", player.get_hp()).red();
+    }
+
     execute!(
         stroke,
         MoveTo(0, 17),
-        Print(format!("  {} point", player.get_hp()))
+        Print(format!("  {}", player_hp))
     )?;
 
     execute!(
@@ -69,10 +77,15 @@ pub fn player_display(player: &Player) -> Result<(), Box<dyn std::error::Error>>
         Print("Equip Card.")
     )?;
 
+    let mut player_equip = player.get_equip_name();
+    if player.get_equip_name() != "None".to_string() {
+        player_equip = player.get_equip_name().green().to_string();
+    }
+
     execute!(
         stroke,
         MoveTo(20, 17),
-        Print(format!("  {}", player.get_equip_name()))
+        Print(format!("  {}", player_equip))
     )?;
 
     print_br();

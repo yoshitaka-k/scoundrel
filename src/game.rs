@@ -1,10 +1,10 @@
+use std::io::{stdout, Write};
 use crossterm::{
     execute,
     cursor::{MoveTo},
     terminal::{Clear, ClearType},
     style::{Stylize},
 };
-use std::io::{stdout, Write};
 
 use crate::constants::{ROOM_MAX_CARD};
 use crate::cli::{
@@ -112,9 +112,11 @@ pub fn app() -> std::io::Result<()> {
         print_br();
 
         if GameSession::is_gameover(&player) {
-            println!("{} HP Empty.", player.get_name());
-            println!("Game Over.");
+            println!("{}", format!("{} HP Empty.", player.get_name()).red().bold());
+            println!("{}", "Game Over.".red().bold());
             wait_for_dramatic_pause();
+
+            print_br();
 
             break 'app Ok(());
         }
