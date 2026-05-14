@@ -91,7 +91,7 @@ impl GameSession {
         println!("Room card selected.");
         let index: usize = input_usize_read_line(
             &format!(
-                "Input: {}-{}.  Default: {}",
+                "Input: {}-{} (Default: {})",
                 min_num,
                 max_num,
                 DEFAULT_SELECT_CARD
