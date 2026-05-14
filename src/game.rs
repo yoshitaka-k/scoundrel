@@ -54,10 +54,13 @@ pub fn app() -> std::io::Result<()> {
 
         print_double_separator();
 
+        println!("  Deck setup and {} a shuffle end.", player.get_name());
+
+        print_single_separator();
+
         if selected_count == 0 {
             if !GameSession::room_setup(&mut deck, &mut field) {
                 println!("Game Clear.");
-                // wait_for_dramatic_pause();
 
                 break 'app Ok(());
             }
@@ -70,17 +73,14 @@ pub fn app() -> std::io::Result<()> {
         }
 
         dungeon_count_display(&deck);
-        // wait_for_dramatic_pause();
 
         print_br();
 
         room_display(field.get_room(), is_skip);
-        // wait_for_dramatic_pause();
 
         print_br();
 
         player_display(&player);
-        // wait_for_dramatic_pause();
 
         print_br();
 
